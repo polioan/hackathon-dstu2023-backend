@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload files</title>
+  </head>
+  <body>
+    <form action="/" enctype="multipart/form-data" method="post">
+      <input type="file" name="upload" multiple />
+      <input type="submit" value="Upload" />
+    </form>
+
+    <form action="/drop_files" enctype="multipart/form-data" method="get">
+      <input type="submit" value="Delite files from server" />
+    </form>
+  </body>
+</html>
