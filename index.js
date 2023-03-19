@@ -27,7 +27,9 @@ let db
 
 app.post('/', (req, res) => {
   if (req.files) {
-    const files = Array.isArray(req.files) ? req.files : [req.files.upload]
+    const files = Array.isArray(req.files.upload)
+      ? req.files.upload
+      : [req.files.upload]
     for (const file of files) {
       file.mv(path.join(uploadPath, file.name))
     }
