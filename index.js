@@ -34,6 +34,10 @@ app.post('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'))
 })
 
+app.get('/admin', (_, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'))
+})
+
 app.get('/drop_files', async (_, res) => {
   try {
     const dirs = await fs.promises.readdir(path.join(__dirname, 'uploads'))
