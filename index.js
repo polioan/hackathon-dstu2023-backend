@@ -64,10 +64,16 @@ app.get('/data', async (_, res) => {
     const tables = await db.all(
       "select name from sqlite_master where type='table'"
     )
+
     const uitables = tables
       .filter(v => v?.name?.toLowerCase().endsWith('ui'))
       .map(v => v.name)
-    const result = await db.all(`SELECT * FROM '${uitables.at(-1)}'`)
+
+    const result = []
+    for (const table of uitables) {
+      const tableData = await db.all(`SELECT * FROM '${table}'`)
+      result.push(tableData)
+    }
     res.json(result)
   } catch {
     res.sendStatus(500)
