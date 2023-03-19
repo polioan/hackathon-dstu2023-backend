@@ -52,6 +52,7 @@ app.get('/drop_files', async (_, res) => {
   } catch (e) {
     res.sendStatus(500)
   }
+  res.sendFile(path.join(__dirname, 'admin.html'))
 })
 
 app.get('/db', (_, res) => {
