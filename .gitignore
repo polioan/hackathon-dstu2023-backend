@@ -10,7 +10,6 @@ lerna-debug.log*
 *.db
 
 node_modules
-dist
 
 # Editor directories and files
 !.vscode/extensions.json

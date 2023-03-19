@@ -7,7 +7,7 @@ const formidable = require('formidable')
 const sqlite3 = require('sqlite3')
 const { open } = require('sqlite')
 const cors = require('cors')
-const { uploadPath, port } = require('./config')
+const { uploadPath, port, dbPath } = require('./config')
 
 const app = express()
 
@@ -46,7 +46,7 @@ app.get('/drop_files', async (_, res) => {
 })
 
 app.get('/db', (_, res) => {
-  res.sendFile(path.join(__dirname, 'database.db'))
+  res.sendFile(path.join(__dirname, dbPath))
 })
 
 app.get('/data', async (_, res) => {
@@ -60,7 +60,7 @@ app.get('/data', async (_, res) => {
 
 async function main() {
   db = await open({
-    filename: './database.db',
+    filename: dbPath,
     driver: sqlite3.Database,
   })
   await new Promise(resolve => app.listen(port, resolve))
