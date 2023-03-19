@@ -61,22 +61,14 @@ app.get('/db', (_, res) => {
 
 app.get('/data', async (_, res) => {
   try {
-    const result = await db.all("SELECT * FROM 'Telegram_result_Ui'")
-    res.json(result)
-  } catch {
-    res.sendStatus(500)
-  }
-})
-
-app.get('/uitables', async (_, res) => {
-  try {
     const tables = await db.all(
       "select name from sqlite_master where type='table'"
     )
     const uitables = tables
       .filter(v => v?.name?.toLowerCase().endsWith('ui'))
       .map(v => v.name)
-    res.json(uitables)
+    const result = await db.all(`SELECT * FROM '${uitables.at(-1)}'`)
+    res.json(result)
   } catch {
     res.sendStatus(500)
   }
