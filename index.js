@@ -7,11 +7,18 @@ const formidable = require('formidable')
 const sqlite3 = require('sqlite3')
 const { open } = require('sqlite')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const { uploadPath, port, dbPath } = require('./config')
 
 const app = express()
 
 app.use(cors())
+
+app.use(
+  fileUpload({
+    limits: { fileSize: 1024 * 1024 * 1024 },
+  })
+)
 
 app.use(express.static(path.join(__dirname, 'static')))
 app.use(express.static(path.join(__dirname, 'dist')))
@@ -19,17 +26,12 @@ app.use(express.static(path.join(__dirname, 'dist')))
 let db
 
 app.post('/', (req, res) => {
-  const form = new formidable.IncomingForm()
-
-  form.parse(req)
-
-  form.on('fileBegin', (_, file) => {
-    file.path = path.join(uploadPath, file.name) // path traversal :((
-  })
-
-  form.on('file', (_, file) => {
-    console.log('Uploaded ' + file.name)
-  })
+  if (req.files) {
+    const files = Array.isArray(req.files) ? req.files : [req.files.upload]
+    for (const file of files) {
+      file.mv(path.join(uploadPath, file.name))
+    }
+  }
 
   res.sendFile(path.join(__dirname, 'admin.html'))
 })
@@ -40,9 +42,9 @@ app.get('/admin', (_, res) => {
 
 app.get('/drop_files', async (_, res) => {
   try {
-    const dirs = await fs.promises.readdir(path.join(__dirname, 'uploads'))
+    const dirs = await fs.promises.readdir(uploadPath)
     for (const file in dirs) {
-      await fs.promises.unlink(path.join(__dirname, 'uploads', file))
+      await fs.promises.unlink(path.join(uploadPath, file))
     }
   } catch (e) {
     res.sendStatus(500)
