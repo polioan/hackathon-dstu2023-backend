@@ -44,9 +44,10 @@ app.get('/admin', (_, res) => {
 
 app.get('/drop_files', async (_, res) => {
   try {
-    const dirs = await fs.promises.readdir(uploadPath)
-    for (const file in dirs) {
-      await fs.promises.unlink(path.join(uploadPath, file))
+    for (const file of await fs.promises.readdir(uploadPath)) {
+      try {
+        await fs.promises.unlink(path.join(uploadPath, file))
+      } catch {}
     }
   } catch (e) {
     res.sendStatus(500)
